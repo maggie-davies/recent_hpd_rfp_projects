@@ -16,5 +16,26 @@ const map = new mapboxgl.Map({
         },
     center: [-74.04729, 40.70191], // starting position [lng, lat].
     zoom: 10 // starting zoom
-    //Note: add bounding box//
+    
+});
+
+console.log(hpd_rfpData); // check if project data are loading correctly
+
+map.on('load',() => {
+
+    map.addSource ('hpd_rfp', {
+        type: 'geojson',
+        data: hpd_rfpData
+    });
+
+    map.addLayer({
+        id: 'projectlocations',
+        type: 'circle',
+        source: 'hpd_rfp',
+        paint: {
+            'circle-radius': 4, 
+            'circle-color': '#f5ad42',
+        }
+    });
+
 });

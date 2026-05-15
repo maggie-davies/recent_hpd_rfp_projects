@@ -1,4 +1,4 @@
-{
+const hpd_rfpData = {
   "type": "FeatureCollection",
   "features": [
     {
