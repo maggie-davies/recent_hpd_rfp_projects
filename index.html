@@ -2,17 +2,23 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>New York City's Housing RFPs</title>
-  <meta name="description" content="A look inside New York City's recent housing RFPs.">
-  <meta name="author" content="Maggie Davies">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New York City's Housing RFPs</title>
+    <meta name="description" content="A look inside New York City's recent housing RFPs.">
+    <meta name="author" content="Maggie Davies">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add the Mapbox GL JS CSS stylesheet -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.23.1/mapbox-gl.css" rel="stylesheet">
+    <!-- Import the Mapbox GL JS bundle -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.23.1/mapbox-gl.js"></script>
 </head>
 
 <body>
-  <h1>HPD RFPs since 2019: Affordable Housing in the City</h1>
-  <script src="scripts.js"></script>
+    <h1>HPD RFPs since 2019: Affordable Housing in the City</h1>
+    <div id="map-container"></div>
+    
+    <script src="scripts.js"></script>
 </body>
 
 </html>
