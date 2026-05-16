@@ -3,7 +3,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFnZ2llLWRhdmllcyIsImEiOiJjbW5pMnkzNWowOTlkMnFwazhna2ZvZGdtIn0.sOizRPdTjcNQ5rsDklJd2Q';
 const map = new mapboxgl.Map({
     container: 'map-container', // container ID
-    style: 'mapbox://styles/mapbox/standard-satellite',
+    style: 'mapbox://styles/mapbox/standard',
         config: {
             basemap: {
                 showPedestrianRoads: false,
@@ -15,7 +15,7 @@ const map = new mapboxgl.Map({
             }
         },
     center: [-74.04729, 40.70191], // starting position [lng, lat].
-    zoom: 10 // starting zoom
+    zoom: 10.2 // starting zoom
     
 });
 
