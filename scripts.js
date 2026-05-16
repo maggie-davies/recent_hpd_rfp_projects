@@ -36,7 +36,7 @@ map.on('load', () => {
         source: 'hpd_rfp',
         paint: {
             'circle-radius': 4,
-            'circle-color': '#f5ad42',
+            'circle-color': '#2c0141',
         }
     });
 
