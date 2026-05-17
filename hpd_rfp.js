@@ -20,7 +20,7 @@ const hpd_rfpData = {
         "description": "100 percent affordable housing on a City-owned lot in the East Village neighborhood in Manhattan.",
         "img1": "https://www.nyc.gov/assets/hpd/images/content/pages/east-5th-street-homepage.jpg",
         "img2": "https://www.nyc.gov/assets/hpd/images/content/pages/east-5th-overview.png",
-        "project_name": " ",
+        "project_name": "324 East 5th Street is still under review",
         "website": "https://www.nyc.gov/site/hpd/services-and-information/east5th-rfp.page"
       }
     },
@@ -43,7 +43,7 @@ const hpd_rfpData = {
         "description": "Housing and community amenities on Parcel E located in the Hunter's Point South neighborhood of Queens.",
         "img1": "https://www.nyc.gov/assets/hpd/images/content/pages/hunterspointe-rfp-header.jpg",
         "img2": "https://www.nyc.gov/assets/hpd/images/content/pages/hunterspointe-rfp-site-overview.png",
-        "project_name": " ",
+        "project_name": "Hunter's Point South Parcel E is still under review",
         "website": "https://www.nyc.gov/site/hpd/services-and-information/hunterspointe-rfp-overview.page"
       }
     },

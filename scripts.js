@@ -187,7 +187,7 @@ map.on('load', () => {
         map.getCanvas().style.cursor = 'pointer';
         const coordinates_hover = e.features[0].geometry.coordinates.slice();
         const description_hover =
-            'Click to explore the winning proposal for' + '<br>' + '<strong>' + e.features[0].properties.hpd_rfp + '</strong>' +
+            'Click to explore' + '<br>' + '<strong>' + e.features[0].properties.hpd_rfp + '</strong>' +
             '<br>' + '<img src="' + e.features[0].properties.img1 + '" alt="Project Image" style="width:100%; height:auto; margin-top:5px;">';
         hoverPopup.setLngLat(coordinates_hover).setHTML(description_hover).addTo(map);
     });
@@ -200,22 +200,30 @@ map.on('load', () => {
 
     map.on('click', 'projectlocations', (e) => {
         // when the click popup is open, disable hover popups until the click popup is closed
-        clickPopupOpen = true; 
+        clickPopupOpen = true;
         hoverPopup.remove();
         // construct the description content for the click popup
         const coordinates_click = e.features[0].geometry.coordinates.slice();
         const properties = e.features[0].properties;
-        let description_click =
-            '<strong>Status:</strong> ' + properties.status + ' | ' + properties.designation +
-            '<br>' + '<strong>Site Type: </strong>' + properties.site_type +
-            '<br>' + '<strong>Proposed Housing Units:</strong> ' + properties.units +
-            '<br>' + '<strong>Development Team:</strong> ' + properties.development_team +
-            '<br>' + '<strong>Architect:</strong> ' + properties.architect +
-            '<br>' + '<strong>Proposed Community Facilities: </strong> ' + properties.community_facilities +
-            '<br>' + '<strong>Residential Amenities: </strong> ' + properties.amenities +
-            '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
+        let description_click;
 
-         // create and style a title for the click popup, and add this, the image gallery, and the description content to the click popup
+        if (properties.status && properties.status.toLowerCase() === 'under review') {
+            description_click =
+                '<strong>RFP Submission Date:</strong> ' + properties.submission +
+                '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
+        } else {
+            description_click =
+                '<strong>Status:</strong> ' + properties.status + ' | ' + properties.designation +
+                '<br>' + '<strong>Site Type: </strong>' + properties.site_type +
+                '<br>' + '<strong>Proposed Housing Units:</strong> ' + properties.units +
+                '<br>' + '<strong>Development Team:</strong> ' + properties.development_team +
+                '<br>' + '<strong>Architect:</strong> ' + properties.architect +
+                '<br>' + '<strong>Proposed Community Facilities: </strong> ' + properties.community_facilities +
+                '<br>' + '<strong>Residential Amenities: </strong> ' + properties.amenities +
+                '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
+        }
+
+        // create and style a title for the click popup, and add this, the image gallery, and the description content to the click popup
         const popupContent = document.createElement('div');     
         const titleDiv = document.createElement('div');
         titleDiv.innerHTML = '<strong>' + properties.project_name + '</strong>';
