@@ -15,7 +15,8 @@ const map = new mapboxgl.Map({
         }
     },
     center: [-73.98327, 40.74664], // starting position [lng, lat].
-    zoom: 10.2 // starting zoom
+    zoom: 10.2, // starting zoom
+    maxBounds: [[-74.25909, 40.477399], [-73.700272, 40.917577]] // restrict the map from zooming out beyond the NYC metro area
 });
 
 console.log(hpd_rfpData); // check if project data are loading correctly
@@ -31,12 +32,20 @@ map.on('load', () => {
         type: 'circle',
         source: 'hpd_rfp',
         paint: {
-            'circle-radius': 4.5,
-            'circle-color': '#413201',
+            'circle-radius': 5.5,
+            'circle-color': [
+                'match',
+                ['downcase', ['get', 'status']],
+                'under review', '#d08f2b',
+                'designated', '#264653',
+                '#413201'
+            ],
+            'circle-stroke-color': 'rgba(255,255,255,0.85)',
+            'circle-stroke-width': 1.5
         }
     });
 
-    const statusMapKey = {
+    const statusMapKey = { // add pill toggles to filter the map view by projects that are under review vs. designated
         'under review': 'underReview',
         designated: 'designated'
     };
@@ -182,6 +191,32 @@ map.on('load', () => {
         return gallery;
     }
 
+    function buildPopupLine(label, value) {
+        if (value === undefined || value === null) return '';
+        const trimmed = String(value).trim();
+        if (!trimmed) return '';
+        return '<br><strong>' + label + '</strong> ' + trimmed;
+    }
+
+    function getClickDescription(properties) {
+        if (properties.status && properties.status.toLowerCase() === 'under review') {
+            let description = buildPopupLine('RFP Submission Date:', properties.submission);
+            description += '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
+            return description;
+        }
+
+        let description = '';
+        description += buildPopupLine('Status:', properties.status + (properties.designation ? ' | ' + properties.designation : ''));
+        description += buildPopupLine('Site Type:', properties.site_type);
+        description += buildPopupLine('Proposed Housing Units:', properties.units);
+        description += buildPopupLine('Development Team:', properties.development_team);
+        description += buildPopupLine('Architect:', properties.architect);
+        description += buildPopupLine('Proposed Community Facilities:', properties.community_facilities);
+        description += buildPopupLine('Residential Amenities:', properties.amenities);
+        description += '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
+        return description;
+    }
+
     map.on('mouseenter', 'projectlocations', (e) => {
         if (clickPopupOpen) return;
         map.getCanvas().style.cursor = 'pointer';
@@ -205,23 +240,7 @@ map.on('load', () => {
         // construct the description content for the click popup
         const coordinates_click = e.features[0].geometry.coordinates.slice();
         const properties = e.features[0].properties;
-        let description_click;
-
-        if (properties.status && properties.status.toLowerCase() === 'under review') {
-            description_click =
-                '<strong>RFP Submission Date:</strong> ' + properties.submission +
-                '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
-        } else {
-            description_click =
-                '<strong>Status:</strong> ' + properties.status + ' | ' + properties.designation +
-                '<br>' + '<strong>Site Type: </strong>' + properties.site_type +
-                '<br>' + '<strong>Proposed Housing Units:</strong> ' + properties.units +
-                '<br>' + '<strong>Development Team:</strong> ' + properties.development_team +
-                '<br>' + '<strong>Architect:</strong> ' + properties.architect +
-                '<br>' + '<strong>Proposed Community Facilities: </strong> ' + properties.community_facilities +
-                '<br>' + '<strong>Residential Amenities: </strong> ' + properties.amenities +
-                '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
-        }
+        const description_click = getClickDescription(properties);
 
         // create and style a title for the click popup, and add this, the image gallery, and the description content to the click popup
         const popupContent = document.createElement('div');     
