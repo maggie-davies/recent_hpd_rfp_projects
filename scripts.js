@@ -16,19 +16,21 @@ const map = new mapboxgl.Map({
     },
     center: [-73.98327, 40.74664], // starting position [lng, lat].
     zoom: 10.2, // starting zoom
-    maxBounds: [[-74.25909, 40.477399], [-73.700272, 40.917577]] // restrict the map from zooming out beyond the NYC metro area
+    maxBounds: [[-74.25909, 40.477399], [-73.700272, 40.917577]] // restrict the map from zooming out or panning beyond the NYC metro area
 });
 
 console.log(hpd_rfpData); // check if project data are loading correctly
 
 map.on('load', () => {
-    map.addSource('hpd_rfp', { // add project data as a new source
+    // add project data as a new source to the map, with the source type set to geojson and the data set to the hpd_rfpData variable defined in hpd_rfp.js
+    map.addSource('hpd_rfp', {
         type: 'geojson',
         data: hpd_rfpData
-    });   
+    });
 
+    // add a new layer to visualize HPD RFP project locations as circles
     map.addLayer({
-        id: 'projectlocations', // add a new layer to visualize HPD RFP project locations as circles
+        id: 'projectlocations',
         type: 'circle',
         source: 'hpd_rfp',
         paint: {
@@ -45,19 +47,17 @@ map.on('load', () => {
         }
     });
 
-    const statusMapKey = { // add pill toggles to filter the map view by projects that are under review vs. designated
+    // add pill toggles to filter the map view by projects that are under review vs. designated
+    const statusMapKey = {
         'under review': 'underReview',
         designated: 'designated'
     };
-
     const statusFilters = {
         underReview: true,
         designated: true
     };
-
     function updateProjectLocationFilter() {
         const activeFilters = [];
-
         if (statusFilters.underReview) {
             activeFilters.push(['==', ['downcase', ['get', 'status']], 'under review']);
         }
@@ -69,19 +69,16 @@ map.on('load', () => {
             map.setLayoutProperty('projectlocations', 'visibility', 'none');
             return;
         }
-
         map.setLayoutProperty('projectlocations', 'visibility', 'visible');
         const filterExpression = activeFilters.length === 1 ? activeFilters[0] : ['any', ...activeFilters];
         map.setFilter('projectlocations', filterExpression);
     }
-
     function updatePillState(status, enabled) {
         const pill = document.querySelector(`[data-status="${status}"]`);
         if (!pill) return;
         pill.classList.toggle('active', enabled);
         pill.classList.toggle('inactive', !enabled);
     }
-
     document.querySelectorAll('.status-pill').forEach((pill) => {
         pill.addEventListener('click', () => {
             const status = pill.dataset.status;
@@ -91,7 +88,6 @@ map.on('load', () => {
             updateProjectLocationFilter();
         });
     });
-
     updateProjectLocationFilter();
 
     // Create popup UI instances for hover and click actions, but don't add them to the map yet.
@@ -104,9 +100,10 @@ map.on('load', () => {
         closeButton: true,
         closeOnClick: false
     });
+    // creating a default setting that the click popup is closed to enable control of the click and hover popups so that they don't conflict with each other
+    let clickPopupOpen = false; 
 
-    let clickPopupOpen = false; // creating a default setting that the click popup is closed
-
+    // create a function to generate an image gallery element for the click popup, enabling users to click through multiple images if they are available
     function createImageGallery(properties) {
         const imageKeys = ['img2', 'img3', 'img4', 'img1'];
         const imageUrls = imageKeys
@@ -147,6 +144,9 @@ map.on('load', () => {
             boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
         };
 
+        //adding buttons for users to click through images in the image gallery that appears in the click pop-up.
+        //and positioning the buttons on the left and right sides of the gallery, with arrows to indicate their function.
+        // The buttons are also disabled and styled with reduced opacity when the user is at the beginning or end of the image list.
         const prevButton = document.createElement('button');
         prevButton.type = 'button';
         prevButton.textContent = '‹';
@@ -191,6 +191,8 @@ map.on('load', () => {
         return gallery;
     }
 
+    //formatting a pop-up with different, simpler information if the project is still under review since it won't have the same information vs. after it's designated.
+    //Also removes any properties that are empty or undefined to avoid showing empty fields in the pop-up description.
     function buildPopupLine(label, value) {
         if (value === undefined || value === null) return '';
         const trimmed = String(value).trim();
@@ -243,7 +245,7 @@ map.on('load', () => {
         const description_click = getClickDescription(properties);
 
         // create and style a title for the click popup, and add this, the image gallery, and the description content to the click popup
-        const popupContent = document.createElement('div');     
+        const popupContent = document.createElement('div');
         const titleDiv = document.createElement('div');
         titleDiv.innerHTML = '<strong>' + properties.project_name + '</strong>';
         titleDiv.style.fontSize = '16px';

@@ -1,3 +1,5 @@
+//author-constructed dataset of HPD RFP projects 2019-2026, with information sourced from HPD's website and press releases.
+//This dataset is used to create the map visualizations in this project.
 const hpd_rfpData = {
   "type": "FeatureCollection",
   "features": [
