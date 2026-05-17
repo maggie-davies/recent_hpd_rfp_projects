@@ -17,7 +17,7 @@ const map = new mapboxgl.Map({
     },
     //attempted to add code bounding the map zoom: didn't work
     // bounds: [[-74.25909, 40.477399], [-73.700272, 40.917577]], //New York City bounds [west, south, east, north] 
-    center: [-74.04729, 40.70191], // starting position [lng, lat].
+    center: [-73.98327, 40.74664], // starting position [lng, lat].
     zoom: 10.2 // starting zoom
 
 });
@@ -46,7 +46,7 @@ map.on('load', () => {
         closeButton: false,
         closeOnClick: false
     });
-    map.addInteraction('places-mouseenter-interaction', {
+    map.addInteraction('projects-mouseenter-interaction', {
         type: 'mouseenter',
         target: { layerId: 'projectlocations' },
         handler: (e) => {
@@ -59,7 +59,7 @@ map.on('load', () => {
             popup.setLngLat(coordinates_hover).setHTML(description_hover).addTo(map);
         }
     });
-    map.addInteraction('places-mouseleave-interaction', {
+    map.addInteraction('projects-mouseleave-interaction', {
         type: 'mouseleave',
         target: { layerId: 'projectlocations' },
         handler: () => {
@@ -68,14 +68,25 @@ map.on('load', () => {
         }
     });
 
-    map.addInteraction('places-click-interaction', {
-        type: 'click',
-        target: { layerId: 'projectlocations' },
-        handler: (e) => {
-            const coordinates_click = e.feature.geometry.coordinates.slice();
-            const description_click = e.feature.properties.project_name;
-            // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to.
-            popup.setLngLat(coordinates_click).setHTML(description).addTo(map);
-        }
-    });
+   // When a click event occurs on a feature in the projectlocations layer, open a popup at the
+        // location of the feature, with description HTML from its properties.
+        map.addInteraction('projects-click-interaction', {
+            type: 'click',
+            target: { layerId: 'projectlocations' },
+            handler: (e) => {
+                // Copy coordinates array.
+                const coordinates_click = e.feature.geometry.coordinates.slice();
+                const description_click = e.feature.properties.project_name + ": " + "<br>" + e.feature.properties.status + " | " + e.feature.properties.site_type + "<br>" + e.feature.properties.units + "<br>" + e.feature.properties.community_facilities + "<br>" + e.feature.properties.amenities + "<br>"+ e.feature.properties.development_team + " | " + e.feature.properties.architect + "<br>" + e.feature.properties.website;
+                // add an image to the popup if the project has an image URL in its properties
+                if (e.feature.properties.img1) {
+                    description_click += "<br><img src='" + e.feature.properties.img1 + "' alt='Project Image' style='width:100%; height:auto; margin-top:5px;'>";
+                }
+                // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to.
+
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates_click)
+                    .setHTML(description_click)
+                    .addTo(map);
+            }
+        });
 });

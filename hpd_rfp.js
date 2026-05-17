@@ -553,7 +553,7 @@ const hpd_rfpData = {
         "site_type": "Vacant",
         "development_team": "Monadnock, Sisters of Charity Housing Development Corporation (SCHDC), The Master Group",
         "architect": "Bernheimer Architects, Starr Whitehouse",
-        "description": "The New Stapleton Waterfront District is a 35-acre decommissioned Navy Base on Staten Island being redeveloped into housing, waterfront open space and retail and community facility uses. It will also include significant infrastructure improvements such as road reconstruction, bicycle and walking paths, and better connections to public transit. This currently vacant HPD site was designated for an affordable housing development and a potential school.",
+        "description": "The New Stapleton Waterfront District is a 35-acre decommissioned Navy Base on Staten Island being redeveloped into housing, waterfront open space and retail and community facility uses.",
         "img1": "https://www.nyc.gov/assets/hpd/images/content/pages/stapleton-site-a-aerial.JPG",
         "img2": "https://www.nyc.gov/assets/hpd/images/content/pages/stapleton-site-a-designation-renderings.jpg",
         "img3": "https://www.nyc.gov/assets/hpd/images/content/pages/stapleton-site-a-designation-renderings.jpg",
