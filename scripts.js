@@ -35,8 +35,8 @@ map.on('load', () => {
         type: 'circle',
         source: 'hpd_rfp',
         paint: {
-            'circle-radius': 4,
-            'circle-color': '#2c0141',
+            'circle-radius': 4.5,
+            'circle-color': '#413201',
         }
     });
 
@@ -52,11 +52,11 @@ map.on('load', () => {
         handler: (e) => {
             map.getCanvas().style.cursor = 'pointer';
             // Copy the coordinates from the POI underneath the cursor
-            const coordinates = e.feature.geometry.coordinates.slice();
-            const description = e.feature.properties.description;
+            const coordinates_hover = e.feature.geometry.coordinates.slice();
+            const description_hover = e.feature.properties.description;
 
             // Populate the popup and set its coordinates based on the feature found.
-            popup.setLngLat(coordinates).setHTML(description).addTo(map);
+            popup.setLngLat(coordinates_hover).setHTML(description_hover).addTo(map);
         }
     });
     map.addInteraction('places-mouseleave-interaction', {
@@ -65,6 +65,17 @@ map.on('load', () => {
         handler: () => {
             map.getCanvas().style.cursor = '';
             popup.remove();
+        }
+    });
+
+    map.addInteraction('places-click-interaction', {
+        type: 'click',
+        target: { layerId: 'projectlocations' },
+        handler: (e) => {
+            const coordinates_click = e.feature.geometry.coordinates.slice();
+            const description_click = e.feature.properties.project_name;
+            // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to.
+            popup.setLngLat(coordinates_click).setHTML(description).addTo(map);
         }
     });
 });
