@@ -1,4 +1,57 @@
-body { margin: 0; padding: 0; }
+body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif; }
+
+/* format the title box and its contents, and position it on top of the map */
+#title-box {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    width: 360px;
+    max-height: 190px;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+    z-index: 5;
+    overflow: hidden;
+}
+#title-box h1 {
+    margin: 0 0 10px;
+    font-size: 1.1rem;
+    line-height: 1.25;
+    color: #1f355d;
+}
+#layer-toggle-pills {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.status-pill {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(77, 85, 104, 0.12);
+    color: #1f355d;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.status-pill.active {
+    background: #1f355d;
+    color: #ffffff;
+}
+.status-pill.inactive {
+    opacity: 0.5;
+}
+#title-caption {
+    margin: 0;
+    color: #4d5568;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    max-height: 92px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
 #map-container {
     position: absolute; top: 0; bottom: 0;
     width: 100%;

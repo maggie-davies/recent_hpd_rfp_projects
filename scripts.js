@@ -36,6 +36,55 @@ map.on('load', () => {
         }
     });
 
+    const statusMapKey = {
+        'under review': 'underReview',
+        designated: 'designated'
+    };
+
+    const statusFilters = {
+        underReview: true,
+        designated: true
+    };
+
+    function updateProjectLocationFilter() {
+        const activeFilters = [];
+
+        if (statusFilters.underReview) {
+            activeFilters.push(['==', ['downcase', ['get', 'status']], 'under review']);
+        }
+        if (statusFilters.designated) {
+            activeFilters.push(['==', ['downcase', ['get', 'status']], 'designated']);
+        }
+
+        if (!activeFilters.length) {
+            map.setLayoutProperty('projectlocations', 'visibility', 'none');
+            return;
+        }
+
+        map.setLayoutProperty('projectlocations', 'visibility', 'visible');
+        const filterExpression = activeFilters.length === 1 ? activeFilters[0] : ['any', ...activeFilters];
+        map.setFilter('projectlocations', filterExpression);
+    }
+
+    function updatePillState(status, enabled) {
+        const pill = document.querySelector(`[data-status="${status}"]`);
+        if (!pill) return;
+        pill.classList.toggle('active', enabled);
+        pill.classList.toggle('inactive', !enabled);
+    }
+
+    document.querySelectorAll('.status-pill').forEach((pill) => {
+        pill.addEventListener('click', () => {
+            const status = pill.dataset.status;
+            const key = statusMapKey[status];
+            statusFilters[key] = !statusFilters[key];
+            updatePillState(status, statusFilters[key]);
+            updateProjectLocationFilter();
+        });
+    });
+
+    updateProjectLocationFilter();
+
     // Create popup UI instances for hover and click actions, but don't add them to the map yet.
     const hoverPopup = new mapboxgl.Popup({
         closeButton: false,
@@ -164,7 +213,7 @@ map.on('load', () => {
             '<br>' + '<strong>Architect:</strong> ' + properties.architect +
             '<br>' + '<strong>Proposed Community Facilities: </strong> ' + properties.community_facilities +
             '<br>' + '<strong>Residential Amenities: </strong> ' + properties.amenities +
-            '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">More information about this project</a>';
+            '<br><br><a href="' + properties.website + '" target="_blank" title="Project Website">Take me to the project website</a>';
 
          // create and style a title for the click popup, and add this, the image gallery, and the description content to the click popup
         const popupContent = document.createElement('div');     
@@ -188,16 +237,6 @@ map.on('load', () => {
         popupContent.appendChild(descriptionDiv);
 
         clickPopup.setLngLat(coordinates_click).setDOMContent(popupContent).addTo(map); // add the click popup to the map at the location of the clicked marker
-    });
-
-    // Close the click popup when the user clicks anywhere outside the projectlocations layer.
-    map.on('click', (e) => {
-        const clickedFeatures = map.queryRenderedFeatures(e.point, {
-            layers: ['projectlocations']
-        });
-        if (!clickedFeatures.length) {
-            clickPopup.close();
-        }
     });
 
     // when the click popup is closed, reset the clickPopupOpen variable to false to allow hover popups to be shown again
