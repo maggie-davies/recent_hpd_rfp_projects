@@ -101,7 +101,7 @@ map.on('load', () => {
         closeOnClick: false
     });
     // creating a default setting that the click popup is closed to enable control of the click and hover popups so that they don't conflict with each other
-    let clickPopupOpen = false; 
+    let clickPopupOpen = false;
 
     // create a function to generate an image gallery element for the click popup, enabling users to click through multiple images if they are available
     function createImageGallery(properties) {
